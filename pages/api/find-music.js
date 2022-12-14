@@ -1,4 +1,4 @@
-import { searchIpfsForHash, searchIpfsForQuery  } from '../../modules/search-ipfs-for-hash';
+import { searchIpfsForHash, searchIpfsForQuery  } from '../../modules/search-ipfs';
 
 export default async function handler(req, res) {
   try {

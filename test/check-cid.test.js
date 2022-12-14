@@ -2,8 +2,8 @@ import {checkCID} from '../modules/find-music';
 
 
 describe('Validate CIDs vs queries', () => {
-  it('Returns true for QmP8GUBMJm9fGt9SWyhXR32PX9fM6VFFEYdRGFMPqBRhei', () => {
-    expect(checkCID('QmP8GUBMJm9fGt9SWyhXR32PX9fM6VFFEYdRGFMPqBRhei')).toBe(true);
+  it('Returns true for bafybeictsppmfh573czve4doxjrfefmumesf4oyos7iizm4qywijl4n6m4', () => {
+    expect(checkCID('bafybeictsppmfh573czve4doxjrfefmumesf4oyos7iizm4qywijl4n6m4')).toBe(true);
   });
   it('Returns true for QmaznTRBCxBXmDiVvezWTFJpQ9128TaWTag4Z4CoXkdogG', () => {
     expect(checkCID('QmaznTRBCxBXmDiVvezWTFJpQ9128TaWTag4Z4CoXkdogG')).toBe(true);

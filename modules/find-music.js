@@ -9,7 +9,7 @@ const validateQuery = (q) => {
 };
 
 
-const checkCID = (query) => {
+export const checkCID = (query) => {
   const regexp = /^(Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,})$/g;
   const isCID = query.search(regexp);
   return isCID !== -1;
@@ -31,15 +31,21 @@ export const findMusicBasedOnSearchQuery= async (query) => {
   }
 };
   
-export const findMusic = async (query, setPlayingNow, setPlaylist) => {
+export const findMusic = async (query, setPlayingNow, setPlaylist, setCurrentSongIndex) => {
   const isCID = checkCID(query);
   if(isCID) {
     const music = await findMusicBasedOnHash(query, setPlayingNow);
     // Check for playlist;
     setPlayingNow(formatMetadata(music.data.data.metadata));
+    
   } else {
     const music = await findMusicBasedOnSearchQuery(query);
-    console.log(music);
+    const formattedMusic = music.data.map((d) => formatMetadata(d.metadata));
+    console.log('hello', formattedMusic)
+    setPlaylist(formattedMusic);
+    setPlayingNow(formattedMusic[0]);
+    setCurrentSongIndex(0);
+
   }
 
 };
