@@ -2,7 +2,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { FaPlayCircle,FaPauseCircle } from 'react-icons/fa';
-import {findMusicBasedOnHash, findMusicBasedOnSearchQuery} from '../modules/find-music';
+import { findMusic } from '../modules/find-music';
 import playSong from '../modules/play-song';
 
 export default function Home() {
@@ -40,18 +40,7 @@ export default function Home() {
                   className="block w-full rounded-full border-gray-300 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   placeholder="Load an IFPS hash"
                 />
-                <button className="mx-2 bg-orange-400 rounded-full px-4 py-2" onClick={() => findMusicBasedOnHash(document.querySelector('#hash').value, setPlayingNow)}>Search</button>
-                <button className=" border-2 border-orange-400 text-orange-400 rounded-full px-4 py-2 bg-white">Play</button>
-              </div>
-              <div className="mt-1 flex p-1">
-                <input
-                  type="text"
-                  name=""
-                  id="hash"
-                  className="block w-full rounded-full border-gray-300 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  placeholder="Search for genres, songs or artists"
-                />
-                <button className="mx-2 bg-orange-400 rounded-full px-4 py-2" onClick={() => findMusicBasedOnSearchQuery()}>Search</button>
+                <button className="mx-2 bg-orange-400 rounded-full px-4 py-2" onClick={() => findMusic(document.querySelector('#hash').value, setPlayingNow, setIsPlaying)}>Search</button>
                 <button className=" border-2 border-orange-400 text-orange-400 rounded-full px-4 py-2 bg-white">Play</button>
               </div>
             </div>
