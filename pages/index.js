@@ -11,6 +11,7 @@ import "rc-tooltip/assets/bootstrap_white.css";
 
 export default function Home() {
   const [playlist, setPlaylist] = useState([]);
+  const [searchPage, setSeachPage] = useState(0);
   const [
     {
       currentSong,
@@ -29,7 +30,7 @@ export default function Home() {
   ] = usePlayer({ playlist });
 
   return (
-    <div className="bg-gray-900">
+    <div className="bg-gray-900 h-screen">
       <main className="p-4 mx-auto w-full sm:w-4/5">
         <div className="mb-8 p-1">
           <h1 className="text-white text-2xl">Decent Music</h1>
@@ -62,9 +63,6 @@ export default function Home() {
                 >
                   Search
                 </button>
-                <button className=" border-2 border-orange-400 text-orange-400 rounded-full px-4 py-2 bg-white">
-                  Play
-                </button>
               </div>
             </div>
           </div>
@@ -83,105 +81,144 @@ export default function Home() {
             timeLapsed={timeLapsed}
             setTime={setTime}
           />
-          <div className="w-full">
-            <div className="sm:flex sm:items-center">
-              <div className="sm:flex-auto"></div>
-            </div>
-            <div className=" mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead className="bg-black">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-300 sm:pl-6"
-                    >
-                      Song
-                    </th>
-                    <th
-                      scope="col"
-                      className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-300 lg:table-cell"
-                    >
-                      Artist
-                    </th>
-                    <th
-                      scope="col"
-                      className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-300 sm:table-cell"
-                    >
-                      CID
-                    </th>
-                    <th
-                      scope="col"
-                      className="sm:hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-300"
-                    ></th>
-                    <th
-                      scope="col"
-                      className="relative py-3.5 pl-3 pr-4 sm:pr-6"
-                    >
-                      <span className="sr-only">Edit</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-300 bg-black">
-                  {playlist &&
-                    playlist.length > 0 &&
-                    playlist.map((song, i) => {
-                      return (
-                        <tr key={song.hash}>
-                          <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-300 sm:w-auto sm:max-w-none sm:pl-6">
-                            {song.title}
-                            <dl className="font-normal lg:hidden">
-                              {/* <dt className="sr-only">Title</dt> */}
+          {playlist && playlist.length ? (
+            <div className="w-full">
+              <div className="sm:flex sm:items-center">
+                <div className="sm:flex-auto"></div>
+              </div>
 
-                              <dd className="mt-1 truncate text-gray-300">
-                                {song.artist}
-                              </dd>
-                              {/* <dt className="sr-only sm:hidden">Length</dt> */}
-                            </dl>
-                          </td>
-                          <td className="hidden px-3 py-4 text-sm text-gray-600 lg:table-cell">
-                            {song.artist}
-                          </td>
-                          {/* <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{song.artist}</td> */}
-                          <td className="px-3 py-4 text-sm text-gray-500">
-                            <Tooltip
-                              placement="top"
-                              trigger={["hover"]}
-                              overlay={song.hash}
-                              overlayClassName="w-96 text-center font-bold p-4"
-                            >
-                              <p className="text-center">
-                                {" "}
-                                {song.hash.slice(0, 3) +
-                                  ".." +
-                                  song.hash.slice(-3)}
-                              </p>
-                            </Tooltip>
-                          </td>
-                          <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                            <button
-                              onClick={async () => {
-                                await setSong(i);
-                                if (i === index && playState) {
-                                  pauseSong();
-                                }
-                              }}
-                              className="text-orange-600 hover:text-indigo-900"
-                            >
-                              {i === index && playState ? (
-                                <FaPauseCircle className="text-2xl" />
-                              ) : (
-                                <FaPlayCircle className="text-2xl" />
-                              )}
-                              <span className="sr-only"></span>
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </table>
+              <div className=" mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                <div className="flex justify-between my-4">
+                  <button
+                    className="p-1"
+                    onClick={() => {
+                      const newSearchPage = searchPage - 1;
+                      if (newSearchPage >= 0) {
+                        setSeachPage(newSearchPage);
+                        findMusic({
+                          query: document.querySelector("#hash").value,
+                          setPlaylist,
+                          setSong,
+                          page: newSearchPage,
+                        });
+                      }
+                    }}
+                  >
+                    Prev
+                  </button>
+                  <p>Page {searchPage + 1}</p>
+                  <button
+                    onClick={() => {
+                      const newSearchPage = searchPage + 1;
+                      setSeachPage(newSearchPage);
+                      findMusic({
+                        query: document.querySelector("#hash").value,
+                        setPlaylist,
+                        setSong,
+                        page: newSearchPage,
+                      });
+                    }}
+                    className="p-1"
+                  >
+                    {" "}
+                    Next
+                  </button>
+                </div>
+                <table className="min-w-full divide-y divide-gray-300">
+                  <thead className="bg-black">
+                    <tr>
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-300 sm:pl-6"
+                      >
+                        Song
+                      </th>
+                      <th
+                        scope="col"
+                        className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-300 lg:table-cell"
+                      >
+                        Artist
+                      </th>
+                      <th
+                        scope="col"
+                        className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-300 sm:table-cell"
+                      >
+                        CID
+                      </th>
+                      <th
+                        scope="col"
+                        className="sm:hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-300"
+                      ></th>
+                      <th
+                        scope="col"
+                        className="relative py-3.5 pl-3 pr-4 sm:pr-6"
+                      >
+                        <span className="sr-only">Edit</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-300 bg-black">
+                    {playlist &&
+                      playlist.length > 0 &&
+                      playlist.map((song, i) => {
+                        return (
+                          <tr key={song.hash}>
+                            <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-300 sm:w-auto sm:max-w-none sm:pl-6">
+                              {song.title}
+                              <dl className="font-normal lg:hidden">
+                                {/* <dt className="sr-only">Title</dt> */}
+
+                                <dd className="mt-1 truncate text-gray-300">
+                                  {song.artist}
+                                </dd>
+                                {/* <dt className="sr-only sm:hidden">Length</dt> */}
+                              </dl>
+                            </td>
+                            <td className="hidden px-3 py-4 text-sm text-gray-600 lg:table-cell">
+                              {song.artist}
+                            </td>
+                            {/* <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{song.artist}</td> */}
+                            <td className="px-3 py-4 text-sm text-gray-500">
+                              <Tooltip
+                                placement="top"
+                                trigger={["hover"]}
+                                overlay={song.hash}
+                                overlayClassName="w-96 text-center font-bold p-4"
+                              >
+                                <p className="text-center">
+                                  {" "}
+                                  {song.hash.slice(0, 3) +
+                                    ".." +
+                                    song.hash.slice(-3)}
+                                </p>
+                              </Tooltip>
+                            </td>
+                            <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                              <button
+                                onClick={async () => {
+                                  await setSong(i);
+                                  if (i === index && playState) {
+                                    pauseSong();
+                                  }
+                                }}
+                                className="text-orange-600 hover:text-indigo-900"
+                              >
+                                {i === index && playState ? (
+                                  <FaPauseCircle className="text-2xl" />
+                                ) : (
+                                  <FaPlayCircle className="text-2xl" />
+                                )}
+                                <span className="sr-only"></span>
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
       </main>
     </div>

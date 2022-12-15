@@ -25,25 +25,25 @@ export const findMusicBasedOnHash = async (query) => {
   }
 };
 
-export const findMusicBasedOnSearchQuery = async (query) => {
+export const findMusicBasedOnSearchQuery = async (query, page) => {
   const validatedQuery = validateQuery(query);
   if (validateQuery) {
     const result = await axios.get(
-      `/api/find-music?query=${validatedQuery}&type=search`
+      `/api/find-music?query=${validatedQuery}&type=search&page=${page || 0}`
     );
     return result.data;
   }
 };
 
-export const findMusic = async ({ query, setPlaylist, setSong }) => {
+export const findMusic = async ({ query, setPlaylist, setSong, page }) => {
   const isCID = checkCID(query);
   if (isCID) {
-    const music = await findMusicBasedOnHash(query);
+    const music = await findMusicBasedOnHash(query, page);
     // Check for playlist;
     await setPlaylist([formatMetadata(music.data.data.metadata)]);
     await setSong(0);
   } else {
-    const music = await findMusicBasedOnSearchQuery(query);
+    const music = await findMusicBasedOnSearchQuery(query, page);
     const formattedMusic = music.data.map((d) => formatMetadata(d.metadata));
     await setPlaylist(formattedMusic);
     await setSong(0);

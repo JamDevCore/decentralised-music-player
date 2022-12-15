@@ -10,7 +10,11 @@ export default async function handler(req, res) {
         const searchResults = await searchIpfsForHash(req.query.query, res);
         res.status(200).json({ message: "success", data: searchResults });
       } else {
-        const searchResults = await searchIpfsForQuery(req.query.query, res);
+        const searchResults = await searchIpfsForQuery(
+          req.query.query,
+          res,
+          req.query.page
+        );
         res.status(200).json({ message: "success", data: searchResults });
       }
     } else {

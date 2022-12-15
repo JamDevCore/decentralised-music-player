@@ -130,10 +130,6 @@ const usePlayer = ({ playlist }) => {
 
   useEffect(() => {
     setCurrentSong(playlist[index]);
-    console.log(playState);
-    // if (playState) {
-    //   playSong();
-    // }
   }, [index, playlist]);
 
   const eventListener = (event) => {

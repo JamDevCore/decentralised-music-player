@@ -6,7 +6,6 @@ export const searchIpfsForHash = async (hash, res) => {
   try {
     const api = new IpfsSearchApi.DefaultApi();
     const data = await api.metadatahashGet(hash);
-    console.log(data);
     data.metadata.hash = hash;
     return data;
   } catch (err) {
@@ -14,12 +13,14 @@ export const searchIpfsForHash = async (hash, res) => {
   }
 };
 
-export const searchIpfsForQuery = async (query, res) => {
+export const searchIpfsForQuery = async (query, res, page) => {
   try {
     const api = new IpfsSearchApi.DefaultApi();
     // {{String}} Search string query, based on Elasticsearch's [Query string query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-dsl-query-string-query) syntax.
     const data = await axios.get(
-      `https://api.ipfs-search.com/v1/search?q=${query}%20last-seen%3A%5B%20now%5C%2Fd-30d%20TO%20*%5D%20metadata.Content-Type%3A(audio*)&type=file&page=0`
+      `https://api.ipfs-search.com/v1/search?q=${query}%20last-seen%3A%5B%20now%5C%2Fd-180d%20TO%20*%5D%20metadata.Content-Type%3A(audio*)&type=file&page=${
+        page || 0
+      }`
     );
     // Checks for correctly formatted CIDs before continuing
     const relevantData = data.data.hits.filter((hit) => checkCID(hit.hash));
@@ -30,7 +31,6 @@ export const searchIpfsForQuery = async (query, res) => {
         return metadata;
       })
     );
-    console.log("rahh", allMetadata);
     return allMetadata;
   } catch (err) {
     console.log(err);
