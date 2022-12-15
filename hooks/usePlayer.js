@@ -94,6 +94,7 @@ const usePlayer = ({ playlist }) => {
   const skipSong = async (direction) => {
     setLastDirectionChange(direction);
     audio.src = ""; // Stops audio download.
+    audio.load();
     if (direction === 'forward') {
       if (index + 1 < playlist.length) {
         await setIndex(index + 1);
