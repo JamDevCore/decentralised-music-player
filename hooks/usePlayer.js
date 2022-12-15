@@ -19,20 +19,33 @@ const usePlayer = ({ playlist }) => {
   function timeUpdate() {
     setTimeLapsed(audio.currentTime);
   }
-
-  function canPlay () {
-    if (playState) {
+  function loadedData() {
+    console.log('loaded', audio.src, audio.loaded ,audio.ended , audio.paused);
+    if (playState && !audio.ended) {
       playSong();
     }
   }
 
-  function error(e) {
+
+
+  // function canPlay () {
+  //     if (playState) {
+  //        playSong();
+  //     }
+  // }
+
+  function error() {
+    console.log('error');
     console.log(audio.error);
+
+    // setDuration(audio.duration || 0);
+    // setTimeLapsed(0);
+    // skipSong(lastDirection);
   }
   function abort() {
     setDuration(audio.duration || 0);
     setTimeLapsed(0);
-    audio.src = '';
+    audio.src = "";
   }
   function ended() {
 
@@ -42,9 +55,12 @@ const usePlayer = ({ playlist }) => {
   
   }
 
+  function progress(e) {
+    // console.log(e);
+  }
   useEffect(() => {
     if (audio) {
-      audio.addEventListener('canplay', canPlay);
+      audio.addEventListener('loadeddata', loadedData);
       audio.addEventListener('durationchange', durationChange);
       audio.addEventListener('timeupdate', timeUpdate);
       // audio.addEventListener('loadeddata', loadedData);
@@ -52,9 +68,9 @@ const usePlayer = ({ playlist }) => {
       audio.addEventListener('error', error);
       audio.addEventListener('abort', abort);
       audio.addEventListener('ended', ended);
-
+      audio.addEventListener('progress', progress);
       () => {
-        audio.removeEventListener('canplay', canPlay);
+        audio.removeEventListener('loadeddata', loadedData);
         audio.removeEventListener('durationchange', durationChange);
         audio.removeEventListener('timeupdate', timeUpdate);
         // audio.removeEventListener('loadeddata', loadedData);
@@ -62,7 +78,8 @@ const usePlayer = ({ playlist }) => {
         audio.removeEventListener('error', error);
         audio.removeEventListener('abort', abort);
         audio.removeEventListener('ended', ended);
-      };
+        audio.removeEventListener('progress', progress);
+      }
     }
   }, [audio]);
 
@@ -76,7 +93,7 @@ const usePlayer = ({ playlist }) => {
 
   const skipSong = async (direction) => {
     setLastDirectionChange(direction);
-    audio.src = ''; // Stops audio download.
+    audio.src = ""; // Stops audio download.
     if (direction === 'forward') {
       if (index + 1 < playlist.length) {
         await setIndex(index + 1);
@@ -103,6 +120,7 @@ const usePlayer = ({ playlist }) => {
 
   const pauseSong = async () => {
     try {
+      console.log('here pause');
       await audio.pause();
       setPlayState(false);
     } catch (err) {
@@ -133,7 +151,11 @@ const usePlayer = ({ playlist }) => {
         }
       } else {
         setError('The song is having trouble loading. It may have recently been deleted from IPFS. You can skip to the next one at any time');
-        console.log('The song is having trouble loading. It may have recently been deleted from IPFS. You can skip to the next one at any time');
+        console.log('yo');
+        // setPlayState(!playState);
+        // skipSong('forward')
+        // audio.src = '';
+
       }
     } catch (err) {
       console.log(err);
