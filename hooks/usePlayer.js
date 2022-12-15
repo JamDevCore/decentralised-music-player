@@ -1,66 +1,81 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from "react";
 
-
-const usePlayer = ({ playlist}) => {
-  const audio = typeof window !== 'undefined' && document.querySelector('#music-player');
+const usePlayer = ({ playlist }) => {
+  const audio =
+    typeof window !== "undefined" && document.querySelector("#music-player");
   const [currentSong, setCurrentSong] = useState();
-  const [lastDirection, setLastDirectionChange] =useState('forward');
+  const [lastDirection, setLastDirectionChange] = useState("forward");
   const [index, setIndex] = useState();
+  const [duration, setDuration] = useState(0);
+  const [timeLapsed, setTimeLapsed] = useState(0);
   const [playState, setPlayState] = useState(false);
-
+  function durationChange() {
+    setDuration(audio.duration || 0);
+    setTimeLapsed(0);
+  }
+  function timeUpdate() {
+    setTimeLapsed(audio.currentTime);
+  }
+  function loadedData() {
+    if (playState && !audio.ended) {
+      playSong();
+    }
+  }
+  function error() {
+    console.log("error");
+    setDuration(audio.duration || 0);
+    setTimeLapsed(0);
+    skipSong(lastDirection);
+  }
+  function abort() {
+    console.log("abort");
+    setDuration(audio.duration || 0);
+    setTimeLapsed(0);
+  }
+  function ended() {
+    setDuration(audio.duration || 0);
+    setTimeLapsed(0);
+    skipSong("forward");
+  }
   useEffect(() => {
-    if(audio) {
-      audio.addEventListener('loadeddata', async (e) => {
-        try {
-
-          if (playState) {
-            playSong(e.target);
-          }
-        } catch (er) {
-          console.log('second', er);
-        }
-      });
-      audio.addEventListener('error', async (e) => {
-        console.log('err', playState);
-        skipSong(lastDirection);
-      });
-      audio.addEventListener('abort', async (e) => {
-        console.log('abort');
-        if(playState) {
-          skipSong(lastDirection);
-        }
-      });
-
-      audio.addEventListener('ended', async (e) => {
-        console.log('ended');
-        if(playState) {
-          skipSong(lastDirection);
-        }
-      });    }
+    if (audio) {
+      audio.removeEventListener("durationchange", durationChange);
+      audio.removeEventListener("timeupdate", timeUpdate);
+      audio.removeEventListener("loadeddata", loadedData);
+      audio.removeEventListener("error", error);
+      audio.removeEventListener("abort", abort);
+      audio.removeEventListener("ended", ended);
+      audio.addEventListener("durationchange", durationChange);
+      audio.addEventListener("timeupdate", timeUpdate);
+      audio.addEventListener("loadeddata", loadedData);
+      audio.addEventListener("error", error);
+      audio.addEventListener("abort", abort);
+      audio.addEventListener("ended", ended);
+    }
   }, [audio]);
 
   const playSongError = () => {
-    console.log('play song error');
+    console.log("play song error");
   };
-  
-  
+
   const pauseSongError = () => {
-    console.log('pause song error');
+    console.log("pause song error");
   };
 
   const skipSong = async (direction) => {
-    setLastDirectionChange(direction)
-    if(direction === 'forward') {
-      if(index + 1 <= playlist.length) {
+    setLastDirectionChange(direction);
+
+    if (direction === "forward") {
+      if (index + 1 <= playlist.length) {
         await setIndex(index + 1);
       } else {
         await setIndex(0);
       }
     } else {
-      if(index -1 >= 0) {
+      if (index - 1 >= 0) {
         await setIndex(index - 1);
       } else {
-        await setIndex(playlist.length -1);
+        await setIndex(playlist.length - 1);
       }
     }
   };
@@ -68,23 +83,27 @@ const usePlayer = ({ playlist}) => {
     try {
       await audio.play();
       await setPlayState(true);
-      console.log('yo');
     } catch (err) {
-      // console.log('helooo', err, audio.playing, audio.error, audio.loaded);
-      // if(!audio.playing) {
-      // // If a song fails to load we skip it forward.
-      // // May be better to add a warning instead
-      // skipSong('forward');
-      // }
+      console.log(err);
+      skipSong(lastDirection);
     }
   };
-  
+
   const pauseSong = async () => {
     try {
+      console.log("here pause");
       await audio.pause();
       setPlayState(false);
     } catch (err) {
       pauseSongError();
+    }
+  };
+
+  const setTime = (time) => {
+    if (time >= duration) {
+      audio.currentTime = duration;
+    } else {
+      audio.currentTime = time;
     }
   };
 
@@ -101,20 +120,37 @@ const usePlayer = ({ playlist}) => {
       console.log(err);
       // If a song fails to load we skip it forward.
       // May be better to add a warning instead
-      skipSong('forward');
+      skipSong("forward");
     }
   };
-  
+
   const setSong = (i) => {
     setIndex(i);
   };
-  
+
   useEffect(() => {
     setCurrentSong(playlist[index]);
-    if(playState) {
-      playSong(audio);
+    console.log(playState);
+    // if (playState) {
+    //   playSong();
+    // }
+  }, [index, playlist]);
+
+  const eventListener = (event) => {
+    if (event.keyCode === "32") {
+      playPauseSong();
     }
-  },[index, playlist]);
+  };
+  // Add event listener
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      document.addEventListener("keydown", eventListener);
+    }
+    () => {
+      document.removeEventListener("keydown", eventListener);
+    };
+  }, []);
+
   return [
     {
       currentSong,
@@ -122,11 +158,14 @@ const usePlayer = ({ playlist}) => {
       playlist,
       playState,
       setPlayState,
+      duration,
+      timeLapsed,
       skipSong,
       playPauseSong,
       playSong,
       setSong,
-      pauseSong
+      pauseSong,
+      setTime,
     },
   ];
 };

@@ -1,29 +1,32 @@
-import Head from 'next/head';
-import NextScript from 'next/script';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import {
-  FaPlayCircle,
-  FaPauseCircle,
-} from 'react-icons/fa';
-import { findMusic } from '../modules/find-music';
-import MusicPlayer from '../components/MusicPlayer';
-import usePlayer from '../hooks/usePlayer';
-
+import Head from "next/head";
+import NextScript from "next/script";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { FaPlayCircle, FaPauseCircle } from "react-icons/fa";
+import { findMusic } from "../modules/find-music";
+import MusicPlayer from "../components/MusicPlayer";
+import usePlayer from "../hooks/usePlayer";
+import Tooltip from "rc-tooltip";
+import "rc-tooltip/assets/bootstrap_white.css";
 
 export default function Home() {
   const [playlist, setPlaylist] = useState([]);
-  const [{
-    currentSong,
-    index,
-    playState,
-    setPlayState,
-    skipSong,
-    playPauseSong,
-    playSong,
-    setSong,
-    pauseSong
-  }]  = usePlayer({ playlist });
+  const [
+    {
+      currentSong,
+      index,
+      playState,
+      setPlayState,
+      skipSong,
+      playPauseSong,
+      playSong,
+      setSong,
+      pauseSong,
+      duration,
+      setTime,
+      timeLapsed,
+    },
+  ] = usePlayer({ playlist });
 
   return (
     <div className="bg-gray-900">
@@ -51,7 +54,7 @@ export default function Home() {
                   className="mx-2 bg-orange-400 rounded-full px-4 py-2"
                   onClick={() =>
                     findMusic({
-                      query: document.querySelector('#hash').value,
+                      query: document.querySelector("#hash").value,
                       setPlaylist,
                       setSong,
                     })
@@ -76,6 +79,9 @@ export default function Home() {
             playSong={playSong}
             setSong={setSong}
             pauseSong={pauseSong}
+            duration={duration}
+            timeLapsed={timeLapsed}
+            setTime={setTime}
           />
           <div className="w-full">
             <div className="sm:flex sm:items-center">
@@ -137,21 +143,35 @@ export default function Home() {
                           </td>
                           {/* <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{song.artist}</td> */}
                           <td className="px-3 py-4 text-sm text-gray-500">
-                            {song.hash.slice(0, 3) + '..' + song.hash.slice(-3)}
+                            <Tooltip
+                              placement="top"
+                              trigger={["hover"]}
+                              overlay={song.hash}
+                              overlayClassName="w-96 text-center font-bold p-4"
+                            >
+                              <p className="text-center">
+                                {" "}
+                                {song.hash.slice(0, 3) +
+                                  ".." +
+                                  song.hash.slice(-3)}
+                              </p>
+                            </Tooltip>
                           </td>
                           <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                             <button
                               onClick={async () => {
                                 await setSong(i);
-                                if(playState) {
+                                if (i === index && playState) {
                                   pauseSong();
                                 }
-                              
-                                
                               }}
                               className="text-orange-600 hover:text-indigo-900"
                             >
-                              {i === index && playState ?  <FaPauseCircle className="text-2xl" /> : <FaPlayCircle className="text-2xl" />}
+                              {i === index && playState ? (
+                                <FaPauseCircle className="text-2xl" />
+                              ) : (
+                                <FaPlayCircle className="text-2xl" />
+                              )}
                               <span className="sr-only"></span>
                             </button>
                           </td>

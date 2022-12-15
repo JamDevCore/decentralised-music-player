@@ -1,5 +1,4 @@
 const formatMetadata = (metatadata) => {
-
   const data = {
     title: metatadata?.title?.[0] || "Unknown",
     artist: metatadata?.Author?.[0] || "Anon",

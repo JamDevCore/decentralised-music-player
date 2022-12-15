@@ -1,11 +1,11 @@
-import axios from 'axios';
-import formatMetadata from './format-metadata';
+import axios from "axios";
+import formatMetadata from "./format-metadata";
 
 const validateQuery = (q) => {
-  if (typeof q === 'string') {
-    return q.replace(/[^a-zA-Z0-9 ]/g, '');
+  if (typeof q === "string") {
+    return q.replace(/[^a-zA-Z0-9 ]/g, "");
   }
-  return '';
+  return "";
 };
 
 export const checkCID = (query) => {
@@ -35,11 +35,7 @@ export const findMusicBasedOnSearchQuery = async (query) => {
   }
 };
 
-export const findMusic = async ({
-  query,
-  setPlaylist,
-  setSong
-}) => {
+export const findMusic = async ({ query, setPlaylist, setSong }) => {
   const isCID = checkCID(query);
   if (isCID) {
     const music = await findMusicBasedOnHash(query);
