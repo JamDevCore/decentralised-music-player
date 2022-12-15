@@ -1,11 +1,11 @@
-const nextJest = require('next/jest');
+const nextJest = require("next/jest");
 const createJestConfig = nextJest({
-  dir: './',
+  dir: "./",
 });
 const customJestConfig = {
-  moduleDirectories: ['node_modules', '<rootDir>/'],
-  'testEnvironmentOptions': {
-    'url': 'http://localhost/'
+  moduleDirectories: ["node_modules", "<rootDir>/"],
+  testEnvironmentOptions: {
+    url: "http://localhost/",
   },
   verbose: true,
 };

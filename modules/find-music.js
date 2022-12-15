@@ -2,50 +2,54 @@ import axios from 'axios';
 import formatMetadata from './format-metadata';
 
 const validateQuery = (q) => {
-  if(typeof q === 'string') {
+  if (typeof q === 'string') {
     return q.replace(/[^a-zA-Z0-9 ]/g, '');
   }
   return '';
 };
 
-
 export const checkCID = (query) => {
-  const regexp = /^(Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,})$/g;
+  const regexp =
+    /^(Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,})$/g;
   const isCID = query.search(regexp);
   return isCID !== -1;
 };
 
-export const findMusicBasedOnHash = async (query, setPlayingNow) => {
+export const findMusicBasedOnHash = async (query) => {
   const validatedQuery = validateQuery(query);
-  if(validateQuery) {
-    const result = await axios.get(`/api/find-music?query=${validatedQuery}&type=hash`);
+  if (validateQuery) {
+    const result = await axios.get(
+      `/api/find-music?query=${validatedQuery}&type=hash`
+    );
     return result;
   }
 };
 
-export const findMusicBasedOnSearchQuery= async (query) => {
+export const findMusicBasedOnSearchQuery = async (query) => {
   const validatedQuery = validateQuery(query);
-  if(validateQuery) {
-    const result = await axios.get(`/api/find-music?query=${validatedQuery}&type=search`);
+  if (validateQuery) {
+    const result = await axios.get(
+      `/api/find-music?query=${validatedQuery}&type=search`
+    );
     return result.data;
   }
 };
-  
-export const findMusic = async (query, setPlayingNow, setPlaylist, setCurrentSongIndex) => {
+
+export const findMusic = async ({
+  query,
+  setPlaylist,
+  setSong
+}) => {
   const isCID = checkCID(query);
-  if(isCID) {
-    const music = await findMusicBasedOnHash(query, setPlayingNow);
+  if (isCID) {
+    const music = await findMusicBasedOnHash(query);
     // Check for playlist;
-    setPlayingNow(formatMetadata(music.data.data.metadata));
-    
+    await setPlaylist([formatMetadata(music.data.data.metadata)]);
+    await setSong(0);
   } else {
     const music = await findMusicBasedOnSearchQuery(query);
     const formattedMusic = music.data.map((d) => formatMetadata(d.metadata));
-    console.log('hello', formattedMusic)
-    setPlaylist(formattedMusic);
-    setPlayingNow(formattedMusic[0]);
-    setCurrentSongIndex(0);
-
+    await setPlaylist(formattedMusic);
+    await setSong(0);
   }
-
 };
