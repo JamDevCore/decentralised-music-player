@@ -45,7 +45,7 @@ const usePlayer = ({ playlist }) => {
   function abort() {
     setDuration(audio.duration || 0);
     setTimeLapsed(0);
-    audio.src = "";
+    // audio.src = "";
   }
   function ended() {
 
@@ -60,7 +60,7 @@ const usePlayer = ({ playlist }) => {
   }
   useEffect(() => {
     if (audio) {
-      audio.addEventListener('loadeddata', loadedData);
+      audio.addEventListener('canplay', loadedData);
       audio.addEventListener('durationchange', durationChange);
       audio.addEventListener('timeupdate', timeUpdate);
       // audio.addEventListener('loadeddata', loadedData);
@@ -70,11 +70,11 @@ const usePlayer = ({ playlist }) => {
       audio.addEventListener('ended', ended);
       audio.addEventListener('progress', progress);
       () => {
-        audio.removeEventListener('loadeddata', loadedData);
+        // audio.removeEventListener('loadeddata', loadedData);
         audio.removeEventListener('durationchange', durationChange);
         audio.removeEventListener('timeupdate', timeUpdate);
         // audio.removeEventListener('loadeddata', loadedData);
-        // audio.removeEventListener('canplay', loadedData);
+        audio.removeEventListener('canplay', loadedData);
         audio.removeEventListener('error', error);
         audio.removeEventListener('abort', abort);
         audio.removeEventListener('ended', ended);

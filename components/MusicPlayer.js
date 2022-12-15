@@ -35,6 +35,7 @@ const MusicPlayer = ({
     <>
       <div key={index}>
         <audio
+          key={currentSong}
           muted={false}
           id="music-player"
           controls
