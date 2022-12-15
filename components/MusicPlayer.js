@@ -101,7 +101,7 @@ const MusicPlayer = ({
               <div className="flex flex-col justify-center px-8 py-8">
                 <div className="my-auto ml-4 flex align-center flex justify-center">
                   <button
-                    className="my-auto mx-4 bg-white h-12 w-12"
+                    className="my-auto mx-2 md:mx-4 bg-white w-8 h-8 sm:h-12 sm:w-12"
                     style={{ borderRadius: "50%" }}
                     onClick={async () => {
                       // setIsLoading(true);
@@ -109,12 +109,12 @@ const MusicPlayer = ({
                     }}
                   >
                     {" "}
-                    <FaFastBackward className="text-2xl text-black my-auto mx-auto" />
+                    <FaFastBackward className="text-lg sm:text-2xl text-black my-auto mx-auto" />
                   </button>
                   {!isLoading ? (
                     <>
                       <button
-                        className="my-auto mx-4"
+                        className="my-auto mx-2 md:mx-4"
                         onClick={async () => {
                           setIsLoading(true);
                           await playPauseSong();
@@ -123,25 +123,25 @@ const MusicPlayer = ({
                       >
                         {" "}
                         {playState ? (
-                          <FaPauseCircle className="text-5xl my-auto" />
+                          <FaPauseCircle className="text-4xl sm:text-5xl my-auto" />
                         ) : (
-                          <FaPlayCircle className="text-5xl my-auto" />
+                          <FaPlayCircle className="text-4xl sm:text-5xl my-auto" />
                         )}
                       </button>
                     </>
                   ) : (
                     <>
                       <button
-                        className="my-auto mx-4 bg-white h-12 w-12"
+                        className="my-auto mx-4 bg-white w-8 h-8 sm:h-12 sm:w-12"
                         style={{ borderRadius: "50%" }}
                       >
                         {" "}
-                        <FaSpinner className="text-2xl text-black my-auto mx-auto spinner" />
+                        <FaSpinner className="text-md sm:text-2xl  text-black my-auto mx-auto spinner" />
                       </button>
                     </>
                   )}
                   <button
-                    className="my-auto mx-4 bg-white h-12 w-12"
+                    className="my-auto mx-2 md:mx-4 bg-white  w-8 h-8 sm:h-12 sm:w-12"
                     style={{ borderRadius: "50%" }}
                     onClick={async () => {
                       setIsLoading(true);
@@ -150,7 +150,7 @@ const MusicPlayer = ({
                     }}
                   >
                     {" "}
-                    <FaFastForward className="text-2xl text-black my-auto mx-auto" />
+                    <FaFastForward className="text-lg sm:text-2xl text-black my-auto mx-auto" />
                   </button>
                 </div>
               </div>
