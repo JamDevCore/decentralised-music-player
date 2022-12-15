@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import {
   FaPlayCircle,
+  FaPauseCircle,
 } from 'react-icons/fa';
 import { findMusic } from '../modules/find-music';
 import MusicPlayer from '../components/MusicPlayer';
@@ -117,7 +118,7 @@ export default function Home() {
                 <tbody className="divide-y divide-gray-300 bg-black">
                   {playlist &&
                     playlist.length > 0 &&
-                    playlist.map((song, index) => {
+                    playlist.map((song, i) => {
                       return (
                         <tr key={song.hash}>
                           <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-300 sm:w-auto sm:max-w-none sm:pl-6">
@@ -140,12 +141,17 @@ export default function Home() {
                           </td>
                           <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                             <button
-                              onClick={() => {
-                                setSong(index);
+                              onClick={async () => {
+                                await setSong(i);
+                                if(playState) {
+                                  pauseSong();
+                                }
+                              
+                                
                               }}
                               className="text-orange-600 hover:text-indigo-900"
                             >
-                              <FaPlayCircle className="text-2xl" />
+                              {i === index && playState ?  <FaPauseCircle className="text-2xl" /> : <FaPlayCircle className="text-2xl" />}
                               <span className="sr-only"></span>
                             </button>
                           </td>

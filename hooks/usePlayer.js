@@ -4,23 +4,39 @@ import React, { useEffect, useState } from 'react';
 const usePlayer = ({ playlist}) => {
   const audio = typeof window !== 'undefined' && document.querySelector('#music-player');
   const [currentSong, setCurrentSong] = useState();
+  const [lastDirection, setLastDirectionChange] =useState('forward');
   const [index, setIndex] = useState();
   const [playState, setPlayState] = useState(false);
 
   useEffect(() => {
     if(audio) {
       audio.addEventListener('loadeddata', async (e) => {
-        console.log(e, playState);
-        if (playState) {
-          playSong(e.target);
+        try {
+
+          if (playState) {
+            playSong(e.target);
+          }
+        } catch (er) {
+          console.log('second', er);
         }
       });
-      audio.addEventListener('error', async (e, err) => {
+      audio.addEventListener('error', async (e) => {
+        console.log('err', playState);
+        skipSong(lastDirection);
+      });
+      audio.addEventListener('abort', async (e) => {
+        console.log('abort');
         if(playState) {
-          skipSong('forward');
+          skipSong(lastDirection);
         }
       });
-    }
+
+      audio.addEventListener('ended', async (e) => {
+        console.log('ended');
+        if(playState) {
+          skipSong(lastDirection);
+        }
+      });    }
   }, [audio]);
 
   const playSongError = () => {
@@ -33,6 +49,7 @@ const usePlayer = ({ playlist}) => {
   };
 
   const skipSong = async (direction) => {
+    setLastDirectionChange(direction)
     if(direction === 'forward') {
       if(index + 1 <= playlist.length) {
         await setIndex(index + 1);
@@ -62,7 +79,7 @@ const usePlayer = ({ playlist}) => {
     }
   };
   
-  const pauseSong = async ({ audio }) => {
+  const pauseSong = async () => {
     try {
       await audio.pause();
       setPlayState(false);
