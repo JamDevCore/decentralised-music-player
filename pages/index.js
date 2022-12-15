@@ -2,7 +2,7 @@ import Head from "next/head";
 import NextScript from "next/script";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { FaPlayCircle, FaPauseCircle } from "react-icons/fa";
+import { FaPlayCircle, FaPauseCircle, FaSpinner } from "react-icons/fa";
 import { findMusic } from "../modules/find-music";
 import MusicPlayer from "../components/MusicPlayer";
 import usePlayer from "../hooks/usePlayer";
@@ -12,6 +12,7 @@ import "rc-tooltip/assets/bootstrap_white.css";
 export default function Home() {
   const [playlist, setPlaylist] = useState([]);
   const [searchPage, setSeachPage] = useState(0);
+  const [isSearching, setIsSearching] = useState(false);
   const [
     {
       currentSong,
@@ -61,7 +62,8 @@ export default function Home() {
                     })
                   }
                 >
-                  Search
+                  {isSearching && <FaSpinner className="spinner" />}
+                  {isSearching ? "Searching" : "Search"}
                 </button>
               </div>
             </div>
@@ -81,6 +83,7 @@ export default function Home() {
             timeLapsed={timeLapsed}
             setTime={setTime}
           />
+
           {playlist && playlist.length ? (
             <div className="w-full">
               <div className="sm:flex sm:items-center">
@@ -109,14 +112,21 @@ export default function Home() {
                   <p>Page {searchPage + 1}</p>
                   <button
                     onClick={() => {
-                      const newSearchPage = searchPage + 1;
-                      setSeachPage(newSearchPage);
-                      findMusic({
-                        query: document.querySelector("#hash").value,
-                        setPlaylist,
-                        setSong,
-                        page: newSearchPage,
-                      });
+                      try {
+                        const newSearchPage = searchPage + 1;
+                        setSeachPage(newSearchPage);
+                        setIsSearching(true);
+                        findMusic({
+                          query: document.querySelector("#hash").value,
+                          setPlaylist,
+                          setSong,
+                          page: newSearchPage,
+                        });
+                        setIsSearching(false);
+                      } catch (err) {
+                        console.log(err);
+                        setIsSearching(false);
+                      }
                     }}
                     className="p-1"
                   >
