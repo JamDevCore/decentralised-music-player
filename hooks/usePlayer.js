@@ -21,6 +21,7 @@ const usePlayer = ({ playlist }) => {
   function loadedData() {
     console.log("loaded", audio.src, audio.loaded, audio.ended, audio.paused);
     if (playState && !audio.ended) {
+      setDuration(audio.duration);
       playSong();
     }
   }
@@ -35,18 +36,18 @@ const usePlayer = ({ playlist }) => {
     console.log("error");
     console.log(audio.error);
 
-    // setDuration(audio.duration || 0);
+    setDuration(audio.duration || 0);
     // setTimeLapsed(0);
     // skipSong(lastDirection);
   }
   function abort() {
     setDuration(audio.duration || 0);
-    setTimeLapsed(0);
+    // setTimeLapsed(0);
     // audio.src = "";
   }
   function ended() {
     setDuration(audio.duration || 0);
-    setTimeLapsed(0);
+    // setTimeLapsed(0);
     skipSong("forward");
   }
 
@@ -88,6 +89,7 @@ const usePlayer = ({ playlist }) => {
 
   const skipSong = async (direction) => {
     setLastDirectionChange(direction);
+    setError('')
     audio.src = ""; // Stops audio download.
     audio.load();
     if (direction === "forward") {
@@ -198,7 +200,7 @@ const usePlayer = ({ playlist }) => {
       playSong,
       setSong,
       setError,
-      newError,
+      error: newError,
       pauseSong,
       setTime,
     },

@@ -2,7 +2,7 @@ import Head from 'next/head';
 import NextScript from 'next/script';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { FaPlayCircle, FaPauseCircle, FaSpinner } from 'react-icons/fa';
+import { FaPlayCircle, FaTimes, FaPauseCircle, FaSpinner } from 'react-icons/fa';
 import { findMusic } from '../modules/find-music';
 import MusicPlayer from '../components/MusicPlayer';
 import usePlayer from '../hooks/usePlayer';
@@ -26,6 +26,8 @@ export default function Home() {
       pauseSong,
       duration,
       setTime,
+      error,
+      setError,
       timeLapsed,
     },
   ] = usePlayer({ playlist });
@@ -94,7 +96,7 @@ export default function Home() {
             timeLapsed={timeLapsed}
             setTime={setTime}
           />
-
+          {error && <div className="bg-red-500 p-4 mt-4 rounded w-full flex jusity-between"><p className="text-white text-md">{error}</p><button onClick={() => setError('')}><FaTimes className="text-md my-auto ml-4"/></button></div>}
           {playlist && playlist.length ? (
             <div className="w-full">
               <div className="sm:flex sm:items-center">
