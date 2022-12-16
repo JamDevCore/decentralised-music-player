@@ -19,7 +19,7 @@ const usePlayer = ({ playlist }) => {
   function timeUpdate() {
 
     setTimeLapsed(audio.currentTime);
-    console.log('timeupdate', audio.duration);
+    // console.log('timeupdate', audio.duration);
   }
   function playing () {
     setDuration(audio.duration || 0);
@@ -29,7 +29,7 @@ const usePlayer = ({ playlist }) => {
   function loadedData() {
     if (playState) {
       setDuration(audio.duration);
-      if(audio.canPlayType(audio.format)) {
+      if(audio.canPlayType(audio.format) === 'probably') {
         setError('This file format cannot be played on your browser');
       } else {
         playSong();
@@ -44,12 +44,12 @@ const usePlayer = ({ playlist }) => {
   // }
 
   function error() {
-    console.log('error');
-    console.log(audio.error);
-    console.log('error', audio.duration);
-    setDuration(audio.duration || 0);
-    // setTimeLapsed(0);
-    // skipSong(lastDirection);
+    console.log('NOWWWW ');
+    console.log(audio.error, audio.error.message);
+    if(!audio.error.message){
+      setError('This file format cannot be played on your browser');
+    }
+ 
   }
   function abort() {
     console.log('abort', audio.duration);
@@ -121,7 +121,7 @@ const usePlayer = ({ playlist }) => {
   };
   const playSong = async () => {
     try {
-      if(audio.canPlayType(audio.format)) {
+      if(audio.canPlayType(audio.format) === 'probably') {
         setError('This file format cannot be played on your browser');
       } else {
         await audio.play();
@@ -164,7 +164,7 @@ const usePlayer = ({ playlist }) => {
         if (!playState || audio.paused) {
           console.log(audio.readyState);
 
-          if(audio.canPlayType(audio.format)) {
+          if(audio.canPlayType(audio.format) === 'probably') {
             setError('This file format cannot be played on your browser');
           } else {
             await audio.play();
