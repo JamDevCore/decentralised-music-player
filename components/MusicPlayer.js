@@ -42,7 +42,7 @@ const MusicPlayer = ({
           autoPlay={false}
           loop={false}
           className="hidden"
-          src={`https://gateway.ipfs.io/ipfs/${playlist[index]?.hash}`}
+          src={`https://gateway.ipfs.io/ipfs/${playlist?.[index]?.hash}`}
         />
         {currentSong && (
           <div className="mt-8" key={index}>
