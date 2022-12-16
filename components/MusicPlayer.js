@@ -25,6 +25,7 @@ const MusicPlayer = ({
   skipSong,
   playPauseSong,
   duration,
+  playlist,
   setTime,
   timeLapsed,
 }) => {
@@ -35,14 +36,14 @@ const MusicPlayer = ({
     <>
       <div key={index}>
         <audio
-          key={currentSong}
+          key={playlist[index]?.hash}
           muted={false}
           id="music-player"
           controls
           autoPlay={false}
           loop={false}
           className="hidden"
-          src={`https://gateway.ipfs.io/ipfs/${currentSong?.hash}`}
+          src={`https://gateway.ipfs.io/ipfs/${playlist[index]?.hash}`}
         />
         {currentSong && (
           <div className="mt-8" key={index}>
