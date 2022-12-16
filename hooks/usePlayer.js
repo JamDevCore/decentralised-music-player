@@ -124,7 +124,7 @@ const usePlayer = ({ playlist }) => {
       await setPlayState(true);
     } catch (err) {
       console.log(err);
-      skipSong(lastDirection);
+      // skipSong(lastDirection);
     }
   };
 
