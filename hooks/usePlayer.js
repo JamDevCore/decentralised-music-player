@@ -1,37 +1,39 @@
-import React, { useEffect, useState, useRef, use } from "react";
+import React, { useEffect, useState, useRef, use } from 'react';
 
 const usePlayer = ({ playlist }) => {
   const audio =
-    typeof window !== "undefined" && document.querySelector("#music-player");
+    typeof window !== 'undefined' && document.querySelector('#music-player');
   const [currentSong, setCurrentSong] = useState();
-  const [lastDirection, setLastDirectionChange] = useState("forward");
+  const [lastDirection, setLastDirectionChange] = useState('forward');
   const [index, setIndex] = useState();
   const [duration, setDuration] = useState(0);
   const [timeLapsed, setTimeLapsed] = useState(0);
   const [playState, setPlayState] = useState(false);
-  const [newError, setError] = useState("");
+  const [newError, setError] = useState('');
 
   function durationChange() {
-    console.log("duration", audio.duration)
+    console.log('duration', audio.duration);
     setDuration(audio.duration || 0);
     setTimeLapsed(0);
   }
   function timeUpdate() {
 
     setTimeLapsed(audio.currentTime);
-    console.log("timeupdate", audio.duration)
+    console.log('timeupdate', audio.duration);
   }
   function playing () {
     setDuration(audio.duration || 0);
-    console.log("playing", audio.duration)
+    console.log('playing', audio.duration);
   }
 
   function loadedData() {
-    console.log("loaded", audio.duration)
-    console.log("loaded", audio.src, audio.loaded, audio.ended, audio.paused);
     if (playState) {
       setDuration(audio.duration);
-      playSong();
+      if(audio.canPlayType(audio.format)) {
+        setError('This file format cannot be played on your browser');
+      } else {
+        playSong();
+      }
     }
   }
 
@@ -42,15 +44,15 @@ const usePlayer = ({ playlist }) => {
   // }
 
   function error() {
-    console.log("error");
+    console.log('error');
     console.log(audio.error);
-    console.log("error", audio.duration)
+    console.log('error', audio.duration);
     setDuration(audio.duration || 0);
     // setTimeLapsed(0);
     // skipSong(lastDirection);
   }
   function abort() {
-    console.log("abort", audio.duration)
+    console.log('abort', audio.duration);
     setDuration(audio.duration || 0);
     // setTimeLapsed(0);
     // audio.src = "";
@@ -58,7 +60,7 @@ const usePlayer = ({ playlist }) => {
   function ended() {
     setDuration(audio.duration || 0);
     // setTimeLapsed(0);
-    skipSong("forward");
+    skipSong('forward');
   }
 
   function progress(e) {
@@ -66,44 +68,44 @@ const usePlayer = ({ playlist }) => {
   }
   useEffect(() => {
     if (audio) {
-      audio.addEventListener("canplay", loadedData);
-      audio.addEventListener("playing", playing);
-      audio.addEventListener("durationchange", durationChange);
-      audio.addEventListener("timeupdate", timeUpdate);
+      audio.addEventListener('canplay', loadedData);
+      audio.addEventListener('playing', playing);
+      audio.addEventListener('durationchange', durationChange);
+      audio.addEventListener('timeupdate', timeUpdate);
       audio.addEventListener('loadeddata', loadedData);
 
-      audio.addEventListener("error", error);
-      audio.addEventListener("abort", abort);
-      audio.addEventListener("ended", ended);
-      audio.addEventListener("progress", progress);
+      audio.addEventListener('error', error);
+      audio.addEventListener('abort', abort);
+      audio.addEventListener('ended', ended);
+      audio.addEventListener('progress', progress);
       () => {
         audio.removeEventListener('loadeddata', loadedData);
-        audio.removeEventListener("durationchange", durationChange);
-        audio.removeEventListener("timeupdate", timeUpdate);
+        audio.removeEventListener('durationchange', durationChange);
+        audio.removeEventListener('timeupdate', timeUpdate);
         // audio.removeEventListener('loadeddata', loadedData);
-        audio.removeEventListener("playing", playing);
-        audio.removeEventListener("canplay", loadedData);
-        audio.removeEventListener("error", error);
-        audio.removeEventListener("abort", abort);
-        audio.removeEventListener("ended", ended);
-        audio.removeEventListener("progress", progress);
+        audio.removeEventListener('playing', playing);
+        audio.removeEventListener('canplay', loadedData);
+        audio.removeEventListener('error', error);
+        audio.removeEventListener('abort', abort);
+        audio.removeEventListener('ended', ended);
+        audio.removeEventListener('progress', progress);
       };
     }
   }, [audio]);
 
   const playSongError = () => {
-    console.log("play song error");
+    console.log('play song error');
   };
 
   const pauseSongError = () => {
-    console.log("pause song error");
+    console.log('pause song error');
   };
 
   const skipSong = async (direction) => {
     setLastDirectionChange(direction);
-    setError('')
+    setError('');
     deleteAudio();
-    if (direction === "forward") {
+    if (direction === 'forward') {
       if (index + 1 < playlist.length) {
         await setIndex(index + 1);
       } else {
@@ -119,8 +121,13 @@ const usePlayer = ({ playlist }) => {
   };
   const playSong = async () => {
     try {
-      await audio.play();
-      await setPlayState(true);
+      if(audio.canPlayType(audio.format)) {
+        setError('This file format cannot be played on your browser');
+      } else {
+        await audio.play();
+        await setPlayState(true);
+      }
+
     } catch (err) {
       console.log(err);
       skipSong(lastDirection);
@@ -129,7 +136,7 @@ const usePlayer = ({ playlist }) => {
 
   const pauseSong = async () => {
     try {
-      console.log("here pause");
+      console.log('here pause');
       await audio.pause();
       setPlayState(false);
     } catch (err) {
@@ -146,26 +153,30 @@ const usePlayer = ({ playlist }) => {
   };
 
   const deleteAudio  = () => {
-    audio.src = ""; // Stops audio download.
+    audio.src = ''; // Stops audio download.
     audio.load();
   };
 
   const playPauseSong = async () => {
     try {
-      console.log('nw state', audio.networkState)
+      console.log('nw state', audio.networkState);
       if (audio.readyState !== 0) {
         if (!playState || audio.paused) {
           console.log(audio.readyState);
 
-          await audio.play();
-          setPlayState(true);
+          if(audio.canPlayType(audio.format)) {
+            setError('This file format cannot be played on your browser');
+          } else {
+            await audio.play();
+            await setPlayState(true);
+          }
         } else {
           await audio.pause();
           setPlayState(false);
         }
       } else {
         setError(
-          "The song is having trouble loading. It may have recently been deleted from IPFS. You can skip to the next one at any time"
+          'The song is having trouble loading. It may have recently been deleted from IPFS. You can skip to the next one at any time'
         );
         // console.log("yo");
         // setPlayState(!playState);
@@ -189,17 +200,17 @@ const usePlayer = ({ playlist }) => {
   }, [index, playlist]);
 
   const eventListener = (event) => {
-    if (event.keyCode === "32") {
+    if (event.keyCode === '32') {
       playPauseSong();
     }
   };
   // Add event listener
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      document.addEventListener("keydown", eventListener);
+    if (typeof window !== 'undefined') {
+      document.addEventListener('keydown', eventListener);
     }
     () => {
-      document.removeEventListener("keydown", eventListener);
+      document.removeEventListener('keydown', eventListener);
     };
   }, []);
 
