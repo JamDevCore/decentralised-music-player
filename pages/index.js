@@ -55,7 +55,7 @@ export default function Home() {
                   placeholder="Search for music e.g 'metal', or paste in an existing IPFS CID"
                 />
                 <button
-                  className="mx-2 bg-orange-400 rounded-full px-4 py-2"
+                  className="mx-2 bg-orange-400 rounded-full px-4 py-2 flex"
                   onClick={async () => {
                     try {
                       setIsSearching(true);
@@ -73,7 +73,7 @@ export default function Home() {
                   }
                   }
                 >
-                  {isSearching && <FaSpinner className="spinner" />}
+                  {isSearching && <FaSpinner className="mr-2 my-auto spinner" />}
                   {isSearching ? 'Searching' : 'Search'}
                 </button>
               </div>
