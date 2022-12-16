@@ -129,7 +129,9 @@ const usePlayer = ({ playlist }) => {
 
   const deleteAudio = () => {
     audio.src = ""; // Stops audio download.
+    setTimeLapsed(0)
     audio.load();
+
   };
 
   const playPauseSong = async () => {
