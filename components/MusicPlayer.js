@@ -84,10 +84,10 @@ const MusicPlayer = ({
                   trackStyle={{ backgroundColor: "#57FF00", height: 10 }}
                   handleStyle={{
                     borderColor: "gray",
-                    height: 14,
-                    width: 14,
+                    height: 22,
+                    width: 22,
                     marginLeft: 0,
-                    marginTop: -2,
+                    marginTop: -5,
                     backgroundColor: "black",
                   }}
                   railStyle={{ backgroundColor: "white", height: 10 }}
