@@ -1,11 +1,11 @@
-import axios from "axios";
-import formatMetadata from "./format-metadata";
+import axios from 'axios';
+import formatMetadata from './format-metadata';
 
 const validateQuery = (q) => {
-  if (typeof q === "string") {
-    return q.replace(/[^a-zA-Z0-9 ]/g, "");
+  if (typeof q === 'string') {
+    return q.replace(/[^a-zA-Z0-9 ]/g, '');
   }
-  return "";
+  return '';
 };
 
 export const checkCID = (query) => {
@@ -35,17 +35,22 @@ export const findMusicBasedOnSearchQuery = async (query, page) => {
   }
 };
 
-export const findMusic = async ({ query, setPlaylist, setSong, page }) => {
-  const isCID = checkCID(query);
-  if (isCID) {
-    const music = await findMusicBasedOnHash(query, page);
-    // Check for playlist;
-    await setPlaylist([formatMetadata(music.data.data.metadata)]);
-    await setSong(0);
-  } else {
-    const music = await findMusicBasedOnSearchQuery(query, page);
-    const formattedMusic = music.data.map((d) => formatMetadata(d.metadata));
-    await setPlaylist(formattedMusic);
-    await setSong(0);
+export const findMusic = async ({ query, setPlaylist, setSong, page, setError }) => {
+  try {
+    const isCID = checkCID(query);
+    setError('')
+    if (isCID) {
+      const music = await findMusicBasedOnHash(query, page);
+      // Check for playlist;
+      await setPlaylist([formatMetadata(music.data.data.metadata)]);
+      await setSong(0);
+    } else {
+      const music = await findMusicBasedOnSearchQuery(query, page);
+      const formattedMusic = music.data.map((d) => formatMetadata(d.metadata));
+      await setPlaylist(formattedMusic);
+      await setSong(0);
+    }
+  } catch (err) {
+    setError('No music found');
   }
 };

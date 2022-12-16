@@ -69,6 +69,7 @@ export default function Home() {
                         setPlaylist,
                         setSong,
                         setCurrentSong,
+                        setError,
                       });
                       setIsSearching(false);
                     } catch (err) {
@@ -126,6 +127,7 @@ export default function Home() {
                           query: document.querySelector("#hash").value,
                           setPlaylist,
                           setSong,
+                          setError,
                           page: newSearchPage,
                           setCurrentSong,
                         });
@@ -147,6 +149,7 @@ export default function Home() {
                           setSong,
                           page: newSearchPage,
                           setCurrentSong,
+                          setError,
                         });
                       } catch (err) {
                         console.log(err);
