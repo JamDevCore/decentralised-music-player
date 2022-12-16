@@ -149,7 +149,7 @@ const usePlayer = ({ playlist }) => {
   const playPauseSong = async () => {
     try {
       if (audio.readyState !== 0) {
-        if (audio.paused) {
+        if (!playState || audio.paused) {
           console.log(audio.readyState);
 
           await audio.play();
