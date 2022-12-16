@@ -12,17 +12,22 @@ const usePlayer = ({ playlist }) => {
   const [newError, setError] = useState("");
 
   function durationChange() {
+    console.log("duration", audio.duration)
     setDuration(audio.duration || 0);
     setTimeLapsed(0);
   }
   function timeUpdate() {
+
     setTimeLapsed(audio.currentTime);
+    console.log("timeupdate", audio.duration)
   }
   function playing () {
     setDuration(audio.duration || 0);
+    console.log("playing", audio.duration)
   }
-  
+
   function loadedData() {
+    console.log("loaded", audio.duration)
     console.log("loaded", audio.src, audio.loaded, audio.ended, audio.paused);
     if (playState && !audio.ended) {
       setDuration(audio.duration);
@@ -39,12 +44,13 @@ const usePlayer = ({ playlist }) => {
   function error() {
     console.log("error");
     console.log(audio.error);
-
+    console.log("error", audio.duration)
     setDuration(audio.duration || 0);
     // setTimeLapsed(0);
     // skipSong(lastDirection);
   }
   function abort() {
+    console.log("abort", audio.duration)
     setDuration(audio.duration || 0);
     // setTimeLapsed(0);
     // audio.src = "";
