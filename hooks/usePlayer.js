@@ -148,7 +148,8 @@ const usePlayer = ({ playlist }) => {
 
   const playPauseSong = async () => {
     try {
-      console.log(audio.networkState, 'nw state')
+      console.log('nw state', audio.networkState)
+      if (audio.readyState !== 0) {
         if (!playState || audio.paused) {
           console.log(audio.readyState);
 
