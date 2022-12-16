@@ -94,7 +94,7 @@ export default function Home() {
             timeLapsed={timeLapsed}
             setTime={setTime}
           />
-          {error && <div className="bg-red-500 p-4 mt-4 rounded w-full flex jusity-between"><p className="text-white text-md">{error}</p><button onClick={() => setError('')}><FaTimes className="text-md my-auto ml-4"/></button></div>}
+          {error && <div className="bg-red-500 p-4 mt-4 rounded w-full flex jusity-between"><p className="text-white text-md">{error}</p><button className="mr-0 ml-auto" onClick={() => setError('')}><FaTimes className="text-md my-auto ml-4"/></button></div>}
           {playlist && playlist.length ? (
             <div className="w-full">
               <div className="sm:flex sm:items-center">
