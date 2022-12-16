@@ -29,11 +29,8 @@ const usePlayer = ({ playlist }) => {
   function loadedData() {
     if (playState) {
       setDuration(audio.duration);
-      if(audio.canPlayType(audio.format) === 'probably') {
-        setError('This file format cannot be played on your browser');
-      } else {
-        playSong();
-      }
+      playSong();
+
     }
   }
 
@@ -44,11 +41,10 @@ const usePlayer = ({ playlist }) => {
   // }
 
   function error() {
-    console.log('NOWWWW ');
-    console.log(audio.error, audio.error.message);
-    if(!audio.error.message){
+    if(audio?.error && audio?.error?.message === ''){
       setError('This file format cannot be played on your browser');
     }
+
  
   }
   function abort() {
@@ -121,13 +117,8 @@ const usePlayer = ({ playlist }) => {
   };
   const playSong = async () => {
     try {
-      if(audio.canPlayType(audio.format) === 'probably') {
-        setError('This file format cannot be played on your browser');
-      } else {
         await audio.play();
         await setPlayState(true);
-      }
-
     } catch (err) {
       console.log(err);
       skipSong(lastDirection);
@@ -160,16 +151,15 @@ const usePlayer = ({ playlist }) => {
   const playPauseSong = async () => {
     try {
       console.log('nw state', audio.networkState);
+      console.log(playlist[index].format)
+      console.log('format', audio.canPlayType(playlist[index].format))
       if (audio.readyState !== 0) {
         if (!playState || audio.paused) {
-          console.log(audio.readyState);
 
-          if(audio.canPlayType(audio.format) === 'probably') {
-            setError('This file format cannot be played on your browser');
-          } else {
             await audio.play();
             await setPlayState(true);
-          }
+
+
         } else {
           await audio.pause();
           setPlayState(false);
