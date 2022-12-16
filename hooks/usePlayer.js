@@ -41,6 +41,7 @@ const usePlayer = ({ playlist }) => {
   // }
 
   function error() {
+    console.log('error', audio.error)
     if(audio?.error && audio?.error?.message === ''){
       setError('This file format cannot be played on your browser');
     }
