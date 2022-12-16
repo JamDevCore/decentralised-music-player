@@ -70,14 +70,14 @@ const usePlayer = ({ playlist }) => {
       audio.addEventListener("playing", playing);
       audio.addEventListener("durationchange", durationChange);
       audio.addEventListener("timeupdate", timeUpdate);
-      // audio.addEventListener('loadeddata', loadedData);
+      audio.addEventListener('loadeddata', loadedData);
 
       audio.addEventListener("error", error);
       audio.addEventListener("abort", abort);
       audio.addEventListener("ended", ended);
       audio.addEventListener("progress", progress);
       () => {
-        // audio.removeEventListener('loadeddata', loadedData);
+        audio.removeEventListener('loadeddata', loadedData);
         audio.removeEventListener("durationchange", durationChange);
         audio.removeEventListener("timeupdate", timeUpdate);
         // audio.removeEventListener('loadeddata', loadedData);
