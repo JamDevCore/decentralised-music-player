@@ -77,7 +77,7 @@ const MusicPlayer = ({
                   key={duration + playlist[index].hash}
                 >{`${formatTime(timeLapsed)} / ${formatTime(duration)}`}</p>
                 <Slider
-                  // key={timeLapsed}
+                  key={timeLapsed}
                   min={0}
                   max={duration}
                   defaultValue={timeLapsed}
