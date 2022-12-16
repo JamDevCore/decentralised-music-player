@@ -1,13 +1,18 @@
-import Head from 'next/head';
-import NextScript from 'next/script';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { FaPlayCircle, FaTimes, FaPauseCircle, FaSpinner } from 'react-icons/fa';
-import { findMusic } from '../modules/find-music';
-import MusicPlayer from '../components/MusicPlayer';
-import usePlayer from '../hooks/usePlayer';
-import Tooltip from 'rc-tooltip';
-import 'rc-tooltip/assets/bootstrap_white.css';
+import Head from "next/head";
+import NextScript from "next/script";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import {
+  FaPlayCircle,
+  FaTimes,
+  FaPauseCircle,
+  FaSpinner,
+} from "react-icons/fa";
+import { findMusic } from "../modules/find-music";
+import MusicPlayer from "../components/MusicPlayer";
+import usePlayer from "../hooks/usePlayer";
+import Tooltip from "rc-tooltip";
+import "rc-tooltip/assets/bootstrap_white.css";
 
 export default function Home() {
   const [playlist, setPlaylist] = useState([]);
@@ -60,7 +65,7 @@ export default function Home() {
                     try {
                       setIsSearching(true);
                       await findMusic({
-                        query: document.querySelector('#hash').value,
+                        query: document.querySelector("#hash").value,
                         setPlaylist,
                         setSong,
                         setCurrentSong,
@@ -70,11 +75,12 @@ export default function Home() {
                       console.log(err);
                       setIsSearching(false);
                     }
-                  }
-                  }
+                  }}
                 >
-                  {isSearching && <FaSpinner className="mr-2 my-auto spinner" />}
-                  {isSearching ? 'Searching' : 'Search'}
+                  {isSearching && (
+                    <FaSpinner className="mr-2 my-auto spinner" />
+                  )}
+                  {isSearching ? "Searching" : "Search"}
                 </button>
               </div>
             </div>
@@ -94,7 +100,14 @@ export default function Home() {
             timeLapsed={timeLapsed}
             setTime={setTime}
           />
-          {error && <div className="bg-red-500 p-4 mt-4 rounded w-full flex jusity-between"><p className="text-white text-md">{error}</p><button className="mr-0 ml-auto" onClick={() => setError('')}><FaTimes className="text-md my-auto ml-4"/></button></div>}
+          {error && (
+            <div className="bg-red-500 p-4 mt-4 rounded w-full flex jusity-between">
+              <p className="text-white text-md">{error}</p>
+              <button className="mr-0 ml-auto" onClick={() => setError("")}>
+                <FaTimes className="text-md my-auto ml-4" />
+              </button>
+            </div>
+          )}
           {playlist && playlist.length ? (
             <div className="w-full">
               <div className="sm:flex sm:items-center">
@@ -110,7 +123,7 @@ export default function Home() {
                       if (newSearchPage >= 0) {
                         setSeachPage(newSearchPage);
                         findMusic({
-                          query: document.querySelector('#hash').value,
+                          query: document.querySelector("#hash").value,
                           setPlaylist,
                           setSong,
                           page: newSearchPage,
@@ -127,15 +140,14 @@ export default function Home() {
                       try {
                         const newSearchPage = searchPage + 1;
                         setSeachPage(newSearchPage);
-         
+
                         await findMusic({
-                          query: document.querySelector('#hash').value,
+                          query: document.querySelector("#hash").value,
                           setPlaylist,
                           setSong,
                           page: newSearchPage,
                           setCurrentSong,
                         });
-                
                       } catch (err) {
                         console.log(err);
                         setIsSearching(false);
@@ -143,7 +155,7 @@ export default function Home() {
                     }}
                     className="p-1"
                   >
-                    {' '}
+                    {" "}
                     Next
                   </button>
                 </div>
@@ -204,14 +216,14 @@ export default function Home() {
                             <td className="px-3 py-4 text-sm text-gray-500">
                               <Tooltip
                                 placement="top"
-                                trigger={['hover']}
+                                trigger={["hover"]}
                                 overlay={song.hash}
                                 overlayClassName="w-96 text-center font-bold p-4"
                               >
                                 <p className="text-center">
-                                  {' '}
+                                  {" "}
                                   {song.hash.slice(0, 3) +
-                                    '..' +
+                                    ".." +
                                     song.hash.slice(-3)}
                                 </p>
                               </Tooltip>

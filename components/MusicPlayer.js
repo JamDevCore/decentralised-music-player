@@ -31,7 +31,6 @@ const MusicPlayer = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  console.log(duration);
   return (
     <>
       <div key={index}>
@@ -73,9 +72,10 @@ const MusicPlayer = ({
                 </h3>
               </div>
               <div className="px-8">
-                <p className="mb-2 text-center" key={duration + playlist[index].hash}>{`${formatTime(
-                  timeLapsed
-                )} / ${formatTime(duration)}`}</p>
+                <p
+                  className="mb-2 text-center"
+                  key={duration + playlist[index].hash}
+                >{`${formatTime(timeLapsed)} / ${formatTime(duration)}`}</p>
                 <Slider
                   // key={timeLapsed}
                   min={0}
