@@ -72,14 +72,15 @@ const MusicPlayer = ({
                   by {currentSong.artist}
                 </h3>
               </div>
-              <div className="px-8" key={duration + timeLapsed}>
+              <div className="px-8">
                 <p className="mb-2 text-center" key={duration}>{`${formatTime(
                   timeLapsed
                 )} / ${formatTime(duration)}`}</p>
                 <Slider
+                  // key={timeLapsed}
                   min={0}
                   max={duration}
-                  value={timeLapsed}
+                  defaultValue={timeLapsed}
                   trackStyle={{ backgroundColor: "#57FF00", height: 10 }}
                   handleStyle={{
                     borderColor: "gray",
@@ -90,7 +91,7 @@ const MusicPlayer = ({
                     backgroundColor: "black",
                   }}
                   railStyle={{ backgroundColor: "white", height: 10 }}
-                  onChange={(e) => {
+                  onAfterChange={(e) => {
                     if (e >= duration) {
                       setTime(duration - 1);
                     } else {

@@ -163,7 +163,7 @@ const usePlayer = ({ playlist }) => {
         setError(
           "The song is having trouble loading. It may have recently been deleted from IPFS. You can skip to the next one at any time"
         );
-        console.log("yo");
+        // console.log("yo");
         // setPlayState(!playState);
         // skipSong('forward')
         // audio.src = '';
