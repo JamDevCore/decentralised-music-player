@@ -29,7 +29,7 @@ const usePlayer = ({ playlist }) => {
   function loadedData() {
     console.log("loaded", audio.duration)
     console.log("loaded", audio.src, audio.loaded, audio.ended, audio.paused);
-    if (playState && !audio.ended) {
+    if (playState) {
       setDuration(audio.duration);
       playSong();
     }
