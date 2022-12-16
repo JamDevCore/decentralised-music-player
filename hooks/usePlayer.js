@@ -29,7 +29,7 @@ const usePlayer = ({ playlist }) => {
   function loadedData() {
     console.log("loaded", audio.duration)
     console.log("loaded", audio.src, audio.loaded, audio.ended, audio.paused);
-    if (!audio.ended) {
+    if (playState && !audio.ended) {
       setDuration(audio.duration);
       playSong();
     }
@@ -176,7 +176,7 @@ const usePlayer = ({ playlist }) => {
       console.log(err);
       // If a song fails to load we skip it forward.
       // May be better to add a warning instead
-      skipSong("forward");
+      // skipSong("forward");
     }
   };
 
