@@ -29,7 +29,7 @@ const usePlayer = ({ playlist }) => {
   function loadedData() {
     console.log("loaded", audio.duration)
     console.log("loaded", audio.src, audio.loaded, audio.ended, audio.paused);
-    if (playState && !audio.ended) {
+    if (!audio.ended) {
       setDuration(audio.duration);
       playSong();
     }
@@ -102,8 +102,7 @@ const usePlayer = ({ playlist }) => {
   const skipSong = async (direction) => {
     setLastDirectionChange(direction);
     setError('')
-    audio.src = ""; // Stops audio download.
-    audio.load();
+    deleteAudio();
     if (direction === "forward") {
       if (index + 1 < playlist.length) {
         await setIndex(index + 1);
@@ -144,6 +143,11 @@ const usePlayer = ({ playlist }) => {
     } else {
       audio.currentTime = time;
     }
+  };
+
+  const deleteAudio  = () => {
+    audio.src = ""; // Stops audio download.
+    audio.load();
   };
 
   const playPauseSong = async () => {
@@ -207,6 +211,7 @@ const usePlayer = ({ playlist }) => {
       playState,
       setPlayState,
       duration,
+      deleteAudio,
       timeLapsed,
       skipSong,
       playPauseSong,

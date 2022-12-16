@@ -28,12 +28,10 @@ export default function Home() {
       setTime,
       error,
       setError,
+      setCurrentSong,
       timeLapsed,
     },
   ] = usePlayer({ playlist });
-  useEffect(() => {
-    console.log('issearching', isSearching);
-  }, [isSearching]);
   return (
     <div className="bg-gray-900 h-screen">
       <main className="p-4 mx-auto w-full sm:w-4/5">
@@ -65,7 +63,7 @@ export default function Home() {
                         query: document.querySelector('#hash').value,
                         setPlaylist,
                         setSong,
-  
+                        setCurrentSong,
                       });
                       setIsSearching(false);
                     } catch (err) {
@@ -116,6 +114,7 @@ export default function Home() {
                           setPlaylist,
                           setSong,
                           page: newSearchPage,
+                          setCurrentSong,
                         });
                       }
                     }}
@@ -134,6 +133,7 @@ export default function Home() {
                           setPlaylist,
                           setSong,
                           page: newSearchPage,
+                          setCurrentSong,
                         });
                 
                       } catch (err) {
