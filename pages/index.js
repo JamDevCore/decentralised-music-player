@@ -57,7 +57,7 @@ export default function Home() {
                   name=""
                   id="hash"
                   className="block w-full rounded-full border-gray-300 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  placeholder="Search for music e.g 'metal', or paste in an existing IPFS CID"
+                  placeholder="Search for music through genre, artist or any term like 'rock', or paste in an existing IPFS CID"
                 />
                 <button
                   className="mx-2 bg-orange-400 rounded-full px-4 py-2 flex"
