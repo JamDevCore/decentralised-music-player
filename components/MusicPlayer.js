@@ -73,7 +73,7 @@ const MusicPlayer = ({
                 </h3>
               </div>
               <div className="px-8">
-                <p className="mb-2 text-center" key={duration}>{`${formatTime(
+                <p className="mb-2 text-center" key={duration + playlist[index].hash}>{`${formatTime(
                   timeLapsed
                 )} / ${formatTime(duration)}`}</p>
                 <Slider

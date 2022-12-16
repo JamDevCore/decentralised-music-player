@@ -11,77 +11,79 @@ const usePlayer = ({ playlist }) => {
   const [playState, setPlayState] = useState(false);
   const [newError, setError] = useState('');
 
-  function durationChange() {
+  const durationChange = () =>{
     console.log('duration', audio.duration);
-    setDuration(audio.duration || 0);
+    setDuration(isNaN(audio.duration) ? 0 : audio.duration);
     setTimeLapsed(0);
-  }
-  function timeUpdate() {
+  };
+  const timeUpdate = () => {
 
     setTimeLapsed(audio.currentTime);
     // console.log('timeupdate', audio.duration);
-  }
-  function playing () {
-    setDuration(audio.duration || 0);
+  };
+  const playing  = () => {
+    setDuration(isNaN(audio.duration) ? 0 : audio.duration);
     console.log('playing', audio.duration);
-  }
+  };
 
-  function loadedData() {
-    if (playState) {
-      setDuration(audio.duration);
-      playSong();
+  const loadedData = () => {
+    console.log('duration', audio.duration)
+    setDuration(isNaN(audio.duration) ? 0 : audio.duration);
+  };
 
-    }
-  }
-
-  // function canPlay () {
+  // const canPlay () {
   //     if (playState) {
   //        playSong();
   //     }
   // }
+  const suspended = () => {
+    console.log('suspended', audio.error, audio.readyState, audio.networkState);
+  };
 
-  function error() {
-    console.log('error', audio.error, currentSong)
+  const error = () => {
+    console.log('console', isNaN(audio.duration), audio.duration);
+    setDuration(isNaN(audio.duration) ? 0 : audio.duration);
     if(currentSong && audio?.error && audio?.error?.message === ''){
       setError('This file format cannot be played on your browser');
     }
 
  
-  }
-  function abort() {
-    console.log('abort', audio.duration);
-    setDuration(audio.duration || 0);
-    // setTimeLapsed(0);
-    // audio.src = "";
-  }
-  function ended() {
-    setDuration(audio.duration || 0);
+  };
+  const abort = () => {
+
+
+  };
+  const ended = () =>{
+
     // setTimeLapsed(0);
     skipSong('forward');
-  }
+  };
 
-  function progress(e) {
+  const progress = () => {
     // console.log(e);
-  }
+  };
   useEffect(() => {
     if (audio) {
-      audio.addEventListener('canplay', loadedData);
+
+      audio.addEventListener('suspend', suspended);
       audio.addEventListener('playing', playing);
       audio.addEventListener('durationchange', durationChange);
       audio.addEventListener('timeupdate', timeUpdate);
       audio.addEventListener('loadeddata', loadedData);
+
 
       audio.addEventListener('error', error);
       audio.addEventListener('abort', abort);
       audio.addEventListener('ended', ended);
       audio.addEventListener('progress', progress);
       () => {
-        audio.removeEventListener('loadeddata', loadedData);
+        audio.removeEventListener('suspend', suspended);
+
         audio.removeEventListener('durationchange', durationChange);
         audio.removeEventListener('timeupdate', timeUpdate);
-        // audio.removeEventListener('loadeddata', loadedData);
+        audio.removeEventListener('loadeddata', loadedData);
         audio.removeEventListener('playing', playing);
-        audio.removeEventListener('canplay', loadedData);
+
         audio.removeEventListener('error', error);
         audio.removeEventListener('abort', abort);
         audio.removeEventListener('ended', ended);
@@ -118,8 +120,8 @@ const usePlayer = ({ playlist }) => {
   };
   const playSong = async () => {
     try {
-        await audio.play();
-        await setPlayState(true);
+      await audio.play();
+      await setPlayState(true);
     } catch (err) {
       console.log(err);
       skipSong(lastDirection);
@@ -152,13 +154,13 @@ const usePlayer = ({ playlist }) => {
   const playPauseSong = async () => {
     try {
       console.log('nw state', audio.networkState);
-      console.log(playlist[index].format)
-      console.log('format', audio.canPlayType(playlist[index].format))
+      console.log(playlist[index].format);
+      console.log('format', audio.canPlayType(playlist[index].format));
       if (audio.readyState !== 0) {
         if (!playState || audio.paused) {
 
-            await audio.play();
-            await setPlayState(true);
+          await audio.play();
+          await setPlayState(true);
 
 
         } else {
@@ -185,6 +187,14 @@ const usePlayer = ({ playlist }) => {
   const setSong = (i) => {
     setIndex(i);
   };
+
+  useEffect(() => {
+    if (playState) {
+      setDuration(isNaN(audio.duration) ? 0 : audio.duration);
+      playSong();
+
+    }
+  }, [currentSong]);
 
   useEffect(() => {
     setCurrentSong(playlist[index]);
