@@ -18,6 +18,10 @@ const usePlayer = ({ playlist }) => {
   function timeUpdate() {
     setTimeLapsed(audio.currentTime);
   }
+  function playing () {
+    setDuration(audio.duration || 0);
+  }
+  
   function loadedData() {
     console.log("loaded", audio.src, audio.loaded, audio.ended, audio.paused);
     if (playState && !audio.ended) {
@@ -57,6 +61,7 @@ const usePlayer = ({ playlist }) => {
   useEffect(() => {
     if (audio) {
       audio.addEventListener("canplay", loadedData);
+      audio.addEventListener("playing", playing);
       audio.addEventListener("durationchange", durationChange);
       audio.addEventListener("timeupdate", timeUpdate);
       // audio.addEventListener('loadeddata', loadedData);
@@ -70,6 +75,7 @@ const usePlayer = ({ playlist }) => {
         audio.removeEventListener("durationchange", durationChange);
         audio.removeEventListener("timeupdate", timeUpdate);
         // audio.removeEventListener('loadeddata', loadedData);
+        audio.removeEventListener("playing", playing);
         audio.removeEventListener("canplay", loadedData);
         audio.removeEventListener("error", error);
         audio.removeEventListener("abort", abort);
